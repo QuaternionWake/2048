@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <termios.h>
+#include <unistd.h>
 
 #define TILESIZE 7
 
@@ -78,7 +80,7 @@ void renderField(int size, int contents[size][size]){
                 else
                     printf(" ");
             }
-        printf("\n");
+        printf("\n\r");
     }
 }
 
@@ -150,7 +152,6 @@ int gameOverCheck(int size, int contents[size][size]){
 }
 
 void mainGameLoop(int size, int contents[size][size]){
-    //get input correctly here
     int invalidInput;
     int ongoing = 1;
 
@@ -159,6 +160,7 @@ void mainGameLoop(int size, int contents[size][size]){
             char move = getchar();
             invalidInput = 0;
             switch (move){
+                case 27: return;
                 case 'w': invalidInput = moveGrid(size, contents);    break;
                 case 'a': rotateGrid(size, contents, 1); invalidInput = moveGrid(size, contents); rotateGrid(size, contents, 3);    break;
                 case 's': rotateGrid(size, contents, 2); invalidInput = moveGrid(size, contents); rotateGrid(size, contents, 2);    break;
@@ -186,6 +188,12 @@ void mainGameLoop(int size, int contents[size][size]){
 }
 
 int main(int argc, char const *argv[]){
+    static struct termios oldTermios, newTermios;
+    tcgetattr(STDIN_FILENO, &oldTermios);
+    newTermios = oldTermios;
+    cfmakeraw(&newTermios);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newTermios);
+
     int size = 4;
     if(argc>1)
         size = atoi(argv[1]);
@@ -204,6 +212,7 @@ int main(int argc, char const *argv[]){
     contents[a.y][a.x] = 1;
     renderField(size, contents);
     mainGameLoop(size, contents);
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldTermios);
 
     return 0;
 }
