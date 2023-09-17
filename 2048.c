@@ -46,40 +46,72 @@ int powOfTwo(int n){
     return res;
 }
 
+void renderTile(int tileLenX, int tileLenY, char tile[tileLenY][tileLenX], int tileContentNum){
+    int i, j;
+    for(i=0; i<tileLenY; i++)
+        for(j=0; j<tileLenX; j++)
+            tile[i][j] = ' ';
+
+    int digitCount = numLen(powOfTwo(tileContentNum));
+    int rows = digitCount/tileLenX + !!(digitCount%tileLenX);
+    int partialRow = digitCount%tileLenX;
+    char tileContentStr[digitCount+1];
+    sprintf(tileContentStr, "%d", powOfTwo(tileContentNum));
+    int printStartX = (tileLenX-partialRow)/2;
+    int printStartY = (tileLenY-rows)/2;
+
+    int digit = 0;
+    if(partialRow){
+        for(i=printStartX; digit<partialRow; i++)
+            tile[printStartY][i] = tileContentStr[digit++];
+        printStartY++;
+    }
+
+    for(i=printStartY; digit<digitCount; i++)
+        for(j=0; j<tileLenX; j++)
+            tile[i][j] = tileContentStr[digit++];
+}
+
 void renderField(int size, int contents[size][size]){
-    int tileLenX =TILESIZE*2+1;
-    int tileLenY =TILESIZE+1;
-    int numLine = tileLenY/2;
+    int tileLenX = TILESIZE*2+1;
+    int tileLenY = TILESIZE+1;
     int totalX = size*tileLenX+1;
     int totalY = size*tileLenY+1;
+
+    char field[totalY][totalX];
+    char tile[tileLenY-3][tileLenX-3];
     int i, j;
-    int notPrinted = 1;
+
+    for(i=0; i<totalY; i++)
+        for(j=0; j<totalX; j++)
+            field[i][j] = ' ';
+
+    for(i=0; i<totalY; i+=tileLenY)
+        for(j=0; j<totalX; j++)
+            field[i][j] = '-';
+
+    for(i=0; i<totalY; i++)
+        for(j=0; j<totalX; j+=tileLenX)
+            field[i][j] = '|';
+
+    for(i=0; i<totalY; i+=tileLenY)
+        for(j=0; j<totalX; j+=tileLenX)
+            field[i][j] = '+';
+
+    for(i=0; i<size; i++)
+        for(j=0; j<size; j++)
+            if(contents[i][j]){
+                renderTile(tileLenX-3, tileLenY-3, tile, contents[i][j]);
+                int k, l;
+                for(l=0; l<tileLenX-3; l++)
+                    for(k=0; k<tileLenY-3; k++)
+                        field[i*tileLenY+2+k][j*tileLenX+2+l] = tile[k][l];
+            }
+
     clear();
     for(i=0; i<totalY; i++){
         for(j=0; j<totalX; j++)
-            if(!(i%tileLenY)){
-                if(!(j%tileLenX))
-                    printf("+");
-                else
-                    printf("-");
-            }else if(i%tileLenY == numLine){
-                if(!(j%tileLenX)){
-                    printf("|");
-                    notPrinted = 1;
-                }else if(notPrinted && contents[i/tileLenY][j/tileLenX]){
-                    int numSkip = numLen(powOfTwo(contents[i/tileLenY][j/tileLenX]));
-                    int skip = (tileLenX-numSkip)/2+numSkip;
-                    printf("%*d", skip, powOfTwo(contents[i/tileLenY][j/tileLenX]));
-                    j+= skip-1;
-                    notPrinted = 0;
-                }else
-                    printf(" ");
-            }else{
-                if(!(j%tileLenX))
-                    printf("|");
-                else
-                    printf(" ");
-            }
+            printf("%c", field[i][j]);
         printf("\n\r");
     }
 }
