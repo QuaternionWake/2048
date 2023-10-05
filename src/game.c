@@ -1,14 +1,18 @@
-struct pos{
-    int x;
-    int y;
-};
+#include "headers/game.h"
+
+#include <stdlib.h>
+#include <time.h>
+#include "headers/get-input.h"
+#include "headers/playfield-rendering.h"
+#include "headers/t-input.h"
+#include "headers/t-pos.h"
 
     /*
      * Returns a random empty tile on the playfield. Used for adding new blocks
      * to the game.
      */
-struct pos randPos(int size, int playfield[size][size]){
-    struct pos a;
+t_pos randPos(int size, int playfield[size][size]){
+    t_pos a;
     do{
         a.x = rand() % size;
         a.y = rand() % size;
@@ -115,10 +119,9 @@ int gameOverCheck(int size, int playfield[size][size]){
 }
 
     /*
-     * The main function running the game, the one connecting everything
-     * together. It keeps running so long as there is at least one valid move.
-     * In charge of getting the input and making sure it is valid, and giving
-     * all other functions what they need to do their job.
+     * The function responsible for running the game. It keeps running so long
+     * as there is at least one valid move or the exit button is pressed.
+     * Connects ond controlls all gameplay realted functions.
      */
 void mainGameLoop(int size, int playfield[size][size], int tileSize){
     int invalidInput;
@@ -126,21 +129,21 @@ void mainGameLoop(int size, int playfield[size][size], int tileSize){
 
     while(ongoing){
         do{
-            char move = getchar();
+            t_input move = getInput();
             invalidInput = 0;
-            switch (move){
-                case 27: return;
-                case 'w': invalidInput = moveGrid(size, playfield);    break;
-                case 'a': rotateGrid(size, playfield, 1); invalidInput = moveGrid(size, playfield); rotateGrid(size, playfield, 3);    break;
-                case 's': rotateGrid(size, playfield, 2); invalidInput = moveGrid(size, playfield); rotateGrid(size, playfield, 2);    break;
-                case 'd': rotateGrid(size, playfield, 3); invalidInput = moveGrid(size, playfield); rotateGrid(size, playfield, 1);    break;
+            switch(move){
+                case INPUT_EXIT:    return;
+                case INPUT_UP:      invalidInput = moveGrid(size, playfield);   break;
+                case INPUT_LEFT:    rotateGrid(size, playfield, 1); invalidInput = moveGrid(size, playfield); rotateGrid(size, playfield, 3);   break;
+                case INPUT_DOWN:    rotateGrid(size, playfield, 2); invalidInput = moveGrid(size, playfield); rotateGrid(size, playfield, 2);   break;
+                case INPUT_RIGHT:   rotateGrid(size, playfield, 3); invalidInput = moveGrid(size, playfield); rotateGrid(size, playfield, 1);   break;
                 default: invalidInput = 1;
             }
         }while(invalidInput);
 
         renderField(size, playfield, tileSize);
 
-        struct pos a = randPos(size, playfield);
+        t_pos a = randPos(size, playfield);
         if(rand()%5)
             playfield[a.y][a.x] = 1;
         else
@@ -154,4 +157,27 @@ void mainGameLoop(int size, int playfield[size][size], int tileSize){
         nanosleep(&ts, NULL);
         renderField(size, playfield, tileSize);
     }
+}
+
+    /*
+     * Initilizes the playfield, seeds the randon number generator, places the
+     * first two tiles and gives the first call to renderField before entering
+     * mainGameLoop.
+     */
+void initializeGame(int size, int tileSize){
+    int playfield[size][size];
+    int i, j;
+    for(i=0; i<size; i++)
+        for(j=0; j<size; j++)
+            playfield[i][j] = 0;
+
+    srand(time(NULL));
+    t_pos a;
+    a = randPos(size, playfield);
+    playfield[a.y][a.x] = 1;
+    a = randPos(size, playfield);
+    playfield[a.y][a.x] = 1;
+
+    renderField(size, playfield, tileSize);
+    mainGameLoop(size, playfield, tileSize);
 }

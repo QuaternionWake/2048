@@ -1,3 +1,7 @@
+#include "headers/playfield-rendering.h"
+
+#include <stdio.h>
+
 #define clear() printf("\033[H\033[J")
 
     /*
