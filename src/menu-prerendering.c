@@ -51,12 +51,12 @@ void initilizeMenuRenderingGlobals(int buttonCount, char *buttonList[]){
         allocateElement(&menuArt);
         {
             char *contents[] =
-                {R"( ___   ___  _  _   ___  )",
-                 R"(|__ \ / _ \| || | / _ \ )",
-                 R"(   ) | | | | || || (_) |)",
-                 R"(  / /| | | |__  | > _ < )",
-                 R"( / /_| |_| |  | || (_) |)",
-                 R"(|____|\___/   |_| \___/ )"};
+                {" ___   ___  _  _   ___  ",
+                 "|__ \\ / _ \\| || | / _ \\ ",
+                 "   ) | | | | || || (_) |",
+                 "  / /| | | |__  | > _ < ",
+                 " / /_| |_| |  | || (_) |",
+                 "|____|\\___/   |_| \\___/ "};
             fillElement(menuArt, contents);
         }
 
