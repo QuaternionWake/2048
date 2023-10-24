@@ -3,16 +3,15 @@
 #include <stdlib.h>
 #include <time.h>
 #include "headers/get-input.h"
-#include "headers/playfield-rendering.h"
-#include "headers/t-input.h"
-#include "headers/t-pos.h"
+#include "headers/playfield-prerendering.h"
+#include "headers/2048-types.h"
 
     /*
      * Returns a random empty tile on the playfield. Used for adding new blocks
      * to the game.
      */
-t_pos randPos(int size, int playfield[size][size]){
-    t_pos a;
+qw_pos randPos(int size, int playfield[size][size]){
+    qw_pos a;
     do{
         a.x = rand() % size;
         a.y = rand() % size;
@@ -32,7 +31,7 @@ void copyPlayfield(int size, int playfield[size][size], int copiedPlayfield[size
 }
 
     /*
-     * Takes a matrix, its size, and the number of rotations and rotates it
+     * Takes a 2d array, its size, and the number of rotations and rotates it
      * 90 degrees clockwise that many times. Used to make all four moves
      * possible to execute with only one function.
      */
@@ -121,18 +120,20 @@ int gameOverCheck(int size, int playfield[size][size]){
     /*
      * The function responsible for running the game. It keeps running so long
      * as there is at least one valid move or the exit button is pressed.
-     * Connects ond controlls all gameplay realted functions.
+     * Connects ond controlls all gameplay realted functions. Calls
+     * prerenderField every turn and resetPlayfieldRenderngGlobals on exit.
      */
-void mainGameLoop(int size, int playfield[size][size], int tileSize){
+void mainGameLoop(int size, int playfield[size][size]){
     int invalidInput;
     int ongoing = 1;
+    int exit = 0;
 
     while(ongoing){
         do{
-            t_input move = getInput();
+            qw_input move = getInput();
             invalidInput = 0;
             switch(move){
-                case INPUT_EXIT:    return;
+                case INPUT_EXIT:    exit = 1; break;
                 case INPUT_UP:      invalidInput = moveGrid(size, playfield);   break;
                 case INPUT_LEFT:    rotateGrid(size, playfield, 1); invalidInput = moveGrid(size, playfield); rotateGrid(size, playfield, 3);   break;
                 case INPUT_DOWN:    rotateGrid(size, playfield, 2); invalidInput = moveGrid(size, playfield); rotateGrid(size, playfield, 2);   break;
@@ -140,10 +141,12 @@ void mainGameLoop(int size, int playfield[size][size], int tileSize){
                 default: invalidInput = 1;
             }
         }while(invalidInput);
+        if(exit)
+            break;
 
-        renderField(size, playfield, tileSize);
+        prerenderField(size, playfield);
 
-        t_pos a = randPos(size, playfield);
+        qw_pos a = randPos(size, playfield);
         if(rand()%5)
             playfield[a.y][a.x] = 1;
         else
@@ -155,14 +158,15 @@ void mainGameLoop(int size, int playfield[size][size], int tileSize){
         ts.tv_sec = 0;
         ts.tv_nsec = 100*1000*1000;
         nanosleep(&ts, NULL);
-        renderField(size, playfield, tileSize);
+        prerenderField(size, playfield);
     }
+    resetPlayfieldRenderngGlobals(size);
 }
 
     /*
      * Initilizes the playfield, seeds the randon number generator, places the
-     * first two tiles and gives the first call to renderField before entering
-     * mainGameLoop.
+     * first two tiles, calls initilizePlayfieldRenderingGlobals and
+     * prerenderField before entering mainGameLoop.
      */
 void initializeGame(int size, int tileSize){
     int playfield[size][size];
@@ -172,12 +176,13 @@ void initializeGame(int size, int tileSize){
             playfield[i][j] = 0;
 
     srand(time(NULL));
-    t_pos a;
+    qw_pos a;
     a = randPos(size, playfield);
     playfield[a.y][a.x] = 1;
     a = randPos(size, playfield);
     playfield[a.y][a.x] = 1;
 
-    renderField(size, playfield, tileSize);
-    mainGameLoop(size, playfield, tileSize);
+    initilizePlayfieldRenderingGlobals(size, tileSize);
+    prerenderField(size, playfield);
+    mainGameLoop(size, playfield);
 }

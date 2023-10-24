@@ -1,8 +1,8 @@
 #ifndef GET_INPUT_H
 #define GET_INPUT_H
 
-#include "t-input.h"
+#include "2048-types.h"
 
-t_input getInput();
+qw_input getInput();
 
 #endif

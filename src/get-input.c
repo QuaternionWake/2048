@@ -1,14 +1,14 @@
 #include "headers/get-input.h"
 
 #include <stdio.h>
-#include "headers/t-input.h"
+#include "headers/2048-types.h"
 
     /*
      * Converts raw input into a format understood by the rest of the program.
      */
-t_input getInput(){
+qw_input getInput(){
     char rawInput = getchar();
-    t_input processedInput;
+    qw_input processedInput;
     switch(rawInput){
         case 'w':   processedInput = INPUT_UP;      break;
         case 's':   processedInput = INPUT_DOWN;    break;

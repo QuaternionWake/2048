@@ -1,28 +1,37 @@
-obj_files := 2048.o game.o get-input.o menu-rendering.o menus.o playfield-rendering.o
+obj_files := tempfiles/2048.o tempfiles/game.o tempfiles/get-input.o tempfiles/rendering.o tempfiles/menus.o tempfiles/playfield-prerendering.o tempfiles/menu-prerendering.o
 
 2048: tempfiles $(obj_files)
-	gcc $(wildcard tempfiles/*.o) -o 2048
+	gcc $(obj_files) -o 2048
 
 tempfiles:
 	mkdir tempfiles -p
 
-2048.o:
-	gcc -c src/2048.c -o tempfiles/$@
+tempfiles/2048.o: src/2048.c
+	gcc -c $? -o $@
 
-game.o:
-	gcc -c src/game.c -o tempfiles/$@
+tempfiles/game.o: src/game.c
+	gcc -c $? -o $@
 
-get-input.o:
-	gcc -c src/get-input.c -o tempfiles/$@
+tempfiles/get-input.o: src/get-input.c
+	gcc -c $? -o $@
 
-menu-rendering.o:
-	gcc -c src/menu-rendering.c -o tempfiles/$@
+tempfiles/rendering.o: src/rendering.c
+	gcc -c $? -o $@
 
-menus.o:
-	gcc -c src/menus.c -o tempfiles/$@
+tempfiles/menus.o: src/menus.c
+	gcc -c $? -o $@
 
-playfield-rendering.o:
-	gcc -c src/playfield-rendering.c -o tempfiles/$@
+tempfiles/playfield-prerendering.o: src/playfield-prerendering.c
+	gcc -c $? -o $@
 
-clear:
+tempfiles/menu-prerendering.o: src/menu-prerendering.c
+	gcc -c $? -o $@
+
+run: 2048
+	./2048
+
+fresh: clean 2048
+
+clean:
 	rm -rf tempfiles
+	rm -f 2048
