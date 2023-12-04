@@ -8,9 +8,6 @@
 
 #include <unistd.h>
 
-    /*
-     * Equations used for aligning qw_displayElements relative to eachother.
-     */
 #define alignElementTopExt(VAR) element->absolutePos.VAR = element->relativeTo->absolutePos.VAR + element->relativePos.VAR - element->size.VAR
 #define alignElementTopInt(VAR) element->absolutePos.VAR = element->relativeTo->absolutePos.VAR + element->relativePos.VAR
 #define alignElementTopMid(VAR) element->absolutePos.VAR = element->relativeTo->absolutePos.VAR + element->relativePos.VAR + element->relativeTo->size.VAR/2 - element->size.VAR
@@ -19,9 +16,6 @@
 #define alignElementBtmInt(VAR) element->absolutePos.VAR = element->relativeTo->absolutePos.VAR + element->relativePos.VAR + element->relativeTo->size.VAR - element->size.VAR
 #define alignElementBtmExt(VAR) element->absolutePos.VAR = element->relativeTo->absolutePos.VAR + element->relativePos.VAR + element->relativeTo->size.VAR
 
-    /*
-     * Returns size of the screen in terms of rows and columns.
-     */
 qw_pos getScreenSize(){
     struct winsize w;
     ioctl(0, TIOCGWINSZ, &w);
@@ -31,9 +25,6 @@ qw_pos getScreenSize(){
     return screenSize;
 }
 
-    /*
-     * Allocates memory for the .contents part of qw_displayElement.
-     */
 void allocateElement(qw_displayElement *element){
     int i;
 
@@ -52,9 +43,6 @@ void allocateElement(qw_displayElement *element){
     }
 }
 
-    /*
-     * Frees memory from the .contents part of qw_displayElement.
-     */
 void freeElement(qw_displayElement *element){
     int i;
 
@@ -64,21 +52,6 @@ void freeElement(qw_displayElement *element){
     free(element->contents);
 }
 
-    /*
-     * Fills a qw_displayElement from a provided char array.
-     */
-void fillElement(qw_displayElement element, char *contents[element.size.x]){
-    int i, j;
-    for(i=0; i<element.size.y; i++)
-        for(j=0; j<element.size.x; j++)
-            element.contents[i][j] = contents[i][j];
-}
-
-
-    /*
-     * One big switch case to take care of all 49 possible placements of a
-     * qw_displayElement.
-     */
 void positionElement(qw_displayElement *element){
     switch(element->vaguePos){  //Tremble before the ALMIGHTY SWITCH CASE
 
@@ -141,18 +114,13 @@ void positionElement(qw_displayElement *element){
 }
 
     /*
-     * Builds a screen and window qw_displayElement, iterates through all given
-     * qw_displayElements, positioning them and placing their contents into the
-     * appropriate place in window.contents, clears the screen and prints
-     * everything out.
-     *
-     * Note the order in which the qw_displayElements are given to the function
-     * does matter, eg. if element b is positioned relative to element a, but
-     * given to the function before (or even without) element a, it will be
-     * placed as if element a was in the top left corner.
+     * The order in which the qw_displayElements are given to the function is
+     * important; if element b is positioned relative to element a, but given to
+     * the function before (or even without) element a, it will be placed as if
+     * element a was in the top left corner.
      * Additionally, any elements given later will overwrite anything a previous
      * one might have placed down, basically; elements given later in the list
-     * are endered over those given earlier.
+     * are renendered over those given earlier.
      */
 void renderScreen(qw_pos blueprint[], int amount, ...){
     va_list elements;

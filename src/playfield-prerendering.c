@@ -6,10 +6,6 @@
 #include "headers/2048-types.h"
 #include "headers/rendering-globals.h"
 
-    /*
-     * Takes an integer and returns the number of digits. Used to know how much
-     * space is needed to print a number.
-     */
 int numLen(int num){
     int len = 0;
     while(num){
@@ -19,11 +15,6 @@ int numLen(int num){
     return len;
 }
 
-    /*
-     * Takes an integer n and returns n-th power of two. Used to convert the
-     * contents of the playfield (natural numbers) into powers of two to be
-     * displayed.
-     */
 int powOfTwo(int n){
     int i;
     int res = 1;
@@ -32,16 +23,7 @@ int powOfTwo(int n){
     return res;
 }
 
-    /*
-     * Takes a qw_displayElement and the unprocessed contents of a tile to fill
-     * its .contents with what that tile should actually look like.
-     *
-     * While the function should theoretically be able to fill up a whole tile
-     * with digits an int is actually not capable of filling up even one row
-     * before overflowing. It would likely have been more practical to hardcode
-     * a bunch of powers of two in form of strings and use those instead of
-     * generating them as needed.
-     */
+    //TODO replace this with hadrcoded strings
 void drawTile(qw_displayElement *tile, int tileContentNum){
     int i, j;
     for(i=0; i<tile->size.y; i++)
@@ -71,11 +53,6 @@ void drawTile(qw_displayElement *tile, int tileContentNum){
             tile->contents[i][j] = tileContentStr[digit++];
 }
 
-    /*
-     * Takes the 2d array containing the tile's values and its size and converts
-     * them to a 2d array of qw_displayElements filled by renderTile, then
-     * passes evertyhing on to renderScreen.
-     */
 void prerenderField(int gridSize, int playfield[gridSize][gridSize]){
     int i, j;
     extern qw_displayElement playfieldBackground;
@@ -90,10 +67,6 @@ void prerenderField(int gridSize, int playfield[gridSize][gridSize]){
     renderScreen(blueprint, 2, &playfieldBackground, playfieldTiles);
 }
 
-    /*
-     * Sets all of the global varaibles used for rendering the playfield to the
-     * correct initial values.
-     */
 void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted){
     int i, j;
     qw_pos tileSize = {.x = tileSizeUnadjusted*2+1,
@@ -143,9 +116,6 @@ void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted){
         }
 }
 
-    /*
-     * Resets all global varaibles used for rendering the playfield back to 0.
-     */
 void resetPlayfieldRenderngGlobals(int gridSize){
     int i, j;
     extern qw_displayElement emptyElement;

@@ -6,10 +6,6 @@
 #include "headers/playfield-prerendering.h"
 #include "headers/2048-types.h"
 
-    /*
-     * Returns a random empty tile on the playfield. Used for adding new blocks
-     * to the game.
-     */
 qw_pos randPos(int size, int playfield[size][size]){
     qw_pos a;
     do{
@@ -19,22 +15,13 @@ qw_pos randPos(int size, int playfield[size][size]){
     return a;
 }
 
-    /*
-     * Makes a copy of the playfield. Used for checking if the game is over and
-     * for rotating the playfield.
-     */
-void copyPlayfield(int size, int playfield[size][size], int copiedPlayfield[size][size]){
+void copyPlayfield(int size, int source[size][size], int dest[size][size]){
     int i, j;
     for(i=0; i<size; i++)
         for(j=0; j<size; j++)
-            copiedPlayfield[i][j] = playfield[i][j];
+            dest[i][j] = source[i][j];
 }
 
-    /*
-     * Takes a 2d array, its size, and the number of rotations and rotates it
-     * 90 degrees clockwise that many times. Used to make all four moves
-     * possible to execute with only one function.
-     */
 void rotateGrid(int size, int playfield[size][size], int rotationsTotal){
     int rotatedPlayfield[size][size];
     int i, j;
@@ -47,17 +34,6 @@ void rotateGrid(int size, int playfield[size][size], int rotationsTotal){
     }
 }
 
-    /*
-     * Takes a playfield and its size and makes an up move. Returns 0 if at
-     * least one merge or shift was done. First all the merges are done in one
-     * loop and then all shifts without merging in another.
-     *
-     *
-     * This was done because it made it easier to ensure no block merges twice
-     * in a single move and that no blocks are left floating. The return value
-     * is used for makeing sure that a new block doesn't spawn if the move was
-     * invalid and for making sure that a valid move exists in gameOverCheck.
-     */
 int moveGrid(int size, int playfield[size][size]){
     int currentX, nextFaller, fallHeight;
     int notMoved = 1;
@@ -69,7 +45,7 @@ int moveGrid(int size, int playfield[size][size]){
         if(fallHeight >= size-1)
             continue;
         for(nextFaller=fallHeight+1; nextFaller<size; nextFaller++)
-            if(playfield[nextFaller][currentX])
+            if(playfield[nextFaller][currentX]){
                 if(playfield[fallHeight][currentX] == playfield[nextFaller][currentX]){
                     playfield[fallHeight][currentX]++;
                     playfield[nextFaller][currentX] = 0;
@@ -78,6 +54,7 @@ int moveGrid(int size, int playfield[size][size]){
                     notMoved = 0;
                 }else
                     fallHeight = nextFaller;
+        }
     }
 
     for(currentX=0; currentX<size; currentX++){
@@ -98,31 +75,17 @@ int moveGrid(int size, int playfield[size][size]){
     return notMoved;
 }
 
-    /*
-     * Checks if the game is over by trying all possible moves. If none succeed
-     * the game is finished.
-     */
 int gameOverCheck(int size, int playfield[size][size]){
     int testPlayfield[size][size];
     int gameOver = 1;
     copyPlayfield(size, playfield, testPlayfield);
-    gameOver = moveGrid(size, testPlayfield);
-    if(!gameOver) return 1;
-    rotateGrid(size, testPlayfield, 1); gameOver = moveGrid(size, testPlayfield); rotateGrid(size, testPlayfield, 3);
-    if(!gameOver) return 1;
-    rotateGrid(size, testPlayfield, 2); gameOver = moveGrid(size, testPlayfield); rotateGrid(size, testPlayfield, 2);
-    if(!gameOver) return 1;
-    rotateGrid(size, testPlayfield, 3); gameOver = moveGrid(size, testPlayfield); rotateGrid(size, testPlayfield, 1);
-    if(!gameOver) return 1;
+    gameOver = moveGrid(size, testPlayfield); if(!gameOver) return 1;
+    rotateGrid(size, testPlayfield, 1); gameOver = moveGrid(size, testPlayfield); rotateGrid(size, testPlayfield, 3); if(!gameOver) return 1;
+    rotateGrid(size, testPlayfield, 2); gameOver = moveGrid(size, testPlayfield); rotateGrid(size, testPlayfield, 2); if(!gameOver) return 1;
+    rotateGrid(size, testPlayfield, 3); gameOver = moveGrid(size, testPlayfield); rotateGrid(size, testPlayfield, 1); if(!gameOver) return 1;
     return 0;
 }
 
-    /*
-     * The function responsible for running the game. It keeps running so long
-     * as there is at least one valid move or the exit button is pressed.
-     * Connects ond controlls all gameplay realted functions. Calls
-     * prerenderField every turn and resetPlayfieldRenderngGlobals on exit.
-     */
 void mainGameLoop(int size, int playfield[size][size]){
     int invalidInput;
     int ongoing = 1;
@@ -132,7 +95,7 @@ void mainGameLoop(int size, int playfield[size][size]){
         do{
             qw_input move = getInput();
             invalidInput = 0;
-            switch(move){
+            switch(move){ //non-up moves are transformed into up moves by rotating the playfield
                 case INPUT_EXIT:    exit = 1; break;
                 case INPUT_UP:      invalidInput = moveGrid(size, playfield);   break;
                 case INPUT_LEFT:    rotateGrid(size, playfield, 1); invalidInput = moveGrid(size, playfield); rotateGrid(size, playfield, 3);   break;
@@ -147,7 +110,7 @@ void mainGameLoop(int size, int playfield[size][size]){
         prerenderField(size, playfield);
 
         qw_pos a = randPos(size, playfield);
-        if(rand()%5)
+        if(rand()%5) //chance a tile spawns as a 4 rather than a 2
             playfield[a.y][a.x] = 1;
         else
             playfield[a.y][a.x] = 2;
@@ -163,11 +126,6 @@ void mainGameLoop(int size, int playfield[size][size]){
     resetPlayfieldRenderngGlobals(size);
 }
 
-    /*
-     * Initilizes the playfield, seeds the randon number generator, places the
-     * first two tiles, calls initilizePlayfieldRenderingGlobals and
-     * prerenderField before entering mainGameLoop.
-     */
 void initializeGame(int size, int tileSize){
     int playfield[size][size];
     int i, j;
@@ -177,7 +135,7 @@ void initializeGame(int size, int tileSize){
 
     srand(time(NULL));
     qw_pos a;
-    a = randPos(size, playfield);
+    a = randPos(size, playfield); //starting two tiles
     playfield[a.y][a.x] = 1;
     a = randPos(size, playfield);
     playfield[a.y][a.x] = 1;

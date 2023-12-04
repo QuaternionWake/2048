@@ -3,9 +3,6 @@
 #include <stdio.h>
 #include "headers/2048-types.h"
 
-    /*
-     * Converts raw input into a format understood by the rest of the program.
-     */
 qw_input getInput(){
     char rawInput = getchar();
     qw_input processedInput;

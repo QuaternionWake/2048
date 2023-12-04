@@ -9,10 +9,6 @@
 //stdio only here until scores and options are implemented
 #include <stdio.h>
 
-    /*
-     * Handles the main menu, holds the menu art and the list of buttons.
-     * Controls the inputs and what the buttons do.
-     */
 void mainMenu(){
     int selection = 0;
     int buttonCount = 4;

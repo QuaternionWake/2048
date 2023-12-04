@@ -4,11 +4,6 @@
 #include "headers/rendering.h"
 #include "headers/rendering-globals.h"
 
-    /*
-     * Sets values of globals used for rendering menus to the correct value to
-     * represent current state of the menu and passes everything on to
-     * renderScreen.
-     */
 void prerenderMenu(int selection){
     extern qw_displayElement buttons;
     extern qw_displayElement menuArt;
@@ -21,10 +16,6 @@ void prerenderMenu(int selection){
     renderScreen(blueprint, 3, &buttons, &menuArt, &selectionElement);
 }
 
-    /*
-     * Sets all of the global varaibles used for rendering the menus to the
-     * correct initial values.
-     */
 void initilizeMenuRenderingGlobals(int buttonCount, char *buttonList[]){
     int i;
     extern qw_displayElement buttons;
@@ -75,9 +66,6 @@ void initilizeMenuRenderingGlobals(int buttonCount, char *buttonList[]){
         }
 }
 
-    /*
-     * Resets all global varaibles used for rendering the menus back to 0.
-     */
 void resetMenuRenderingGlobals(){
     extern qw_displayElement emptyElement;
     extern qw_displayElement buttons;
