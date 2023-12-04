@@ -52,6 +52,13 @@ void freeElement(qw_displayElement *element){
     free(element->contents);
 }
 
+void fillElement(qw_displayElement element, char *contents[element.size.x]){
+    int i, j;
+    for(i=0; i<element.size.y; i++)
+        for(j=0; j<element.size.x; j++)
+            element.contents[i][j] = contents[i][j];
+}
+
 void positionElement(qw_displayElement *element){
     switch(element->vaguePos){  //Tremble before the ALMIGHTY SWITCH CASE
 
