@@ -8,15 +8,15 @@ typedef struct displayElement qw_displayElement;
 
 enum input{INPUT_UP, INPUT_DOWN, INPUT_LEFT, INPUT_RIGHT, INPUT_EXIT, INPUT_ENTER};
 
-enum vaguePos{  TLC,    TL,   TML,  TM,   TMR,   TR,    TRC,
+enum vaguePos{TLC,    TL,   TML,  TM,   TMR,   TR,    TRC,
 
-                LT,     ITL,  ITML, ITM, ITMR,  ITR,     RT,
-                LMT,    ILMT, MTL,  MT,   MTR, IRMT,    RMT,
-                LM,     ILM,  ML,   M,     MR,  IRM,     RM,
-                LMB,    ILMB, MBL,  MB,   MBR, IRMB,    RMB,
-                LB,     IBL,  IBML, IBM, IBMR,  IBR,     RB,
+              LT,     ITL,  ITML, ITM, ITMR,  ITR,     RT,
+              LMT,    ILMT, MTL,  MT,   MTR, IRMT,    RMT,
+              LM,     ILM,  ML,   M,     MR,  IRM,     RM,
+              LMB,    ILMB, MBL,  MB,   MBR, IRMB,    RMB,
+              LB,     IBL,  IBML, IBM, IBMR,  IBR,     RB,
 
-                BLC,    BL,   BML,  BM,   BMR,   BR,    BRC};
+              BLC,    BL,   BML,  BM,   BMR,   BR,    BRC};
 
 struct pos{
     short x;

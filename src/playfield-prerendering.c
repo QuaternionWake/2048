@@ -156,6 +156,9 @@ void resetPlayfieldRenderngGlobals(int gridSize){
             freeElement(&playfieldTiles[i][j]);
             playfieldTiles[i][j] = emptyElement;
         }
+    for(i=0; i<gridSize; i++)
+        free(playfieldTiles[i]);
+    free(playfieldTiles);
     freeElement(&playfieldBackground);
     playfieldBackground = emptyElement;
 }
