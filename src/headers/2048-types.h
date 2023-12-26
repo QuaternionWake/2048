@@ -33,7 +33,8 @@ struct displayElement{
     char **contents;
 };
 
-#define clear() printf("\033[H\033[J")
+#define clear() puts("\033[H\033[J")
+#define moveCursor(x, y) printf("\033[%d;%dH", y, x)
 #define max(a, b) (((a)>(b)) ? (a) : (b))
 #define min(a, b) (((a)<(b)) ? (a) : (b))
 

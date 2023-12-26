@@ -138,12 +138,12 @@ void renderScreen(qw_pos blueprint[], int amount, ...){
     screen.size = getScreenSize();
     allocateElement(&screen);
     qw_displayElement window = {.relativePos.x=0, .relativePos.y=0, .size.x=0, .size.y=0,
+                                .absolutePos.x=0, .absolutePos.y=0,
                                 .vaguePos=M, .relativeTo=&screen, .render=0, .contents=NULL};
     window.size = screen.size;
     window.size.x -= 2;
     window.size.y -= 2;
     allocateElement(&window);
-    positionElement(&window);
     int i, j, k, l, m;
     for(i=0; i<window.size.y; i++)
         for(j=0; j<window.size.x; j++)
@@ -192,19 +192,20 @@ void renderScreen(qw_pos blueprint[], int amount, ...){
                             window.contents[currentElement[i][j].absolutePos.y + k][currentElement[i][j].absolutePos.x + l] = currentElement[i][j].contents[k][l];
                     if(currentElement[i][j].relativeTo == &window)
                         currentElement[i][j].relativeTo = NULL;
-                    }
+                }
         }
 
+    positionElement(&window);
     for(i=0; i<window.size.y; i++)
         for(j=0; j<window.size.x; j++)
             screen.contents[window.absolutePos.y + i][window.absolutePos.x + j] = window.contents[i][j];
 
-    clear();
+    moveCursor(0, 0);
     for(i=0; i<screen.size.y; i++){
         for(j=0; j<screen.size.x; j++)
             putchar(screen.contents[i][j]);
         if(i != screen.size.y-1)
-            printf("\n\r");
+            puts("\r");
     }
 
     freeElement(&screen);

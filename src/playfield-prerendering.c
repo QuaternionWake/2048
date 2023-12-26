@@ -74,7 +74,7 @@ void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted){
 
     extern qw_displayElement playfieldBackground;
         playfieldBackground.relativePos.x = 0;
-        playfieldBackground.relativePos.y = -1;
+        playfieldBackground.relativePos.y = 0;
         playfieldBackground.size.x = gridSize*tileSize.x+1;
         playfieldBackground.size.y = gridSize*tileSize.y+1;
         playfieldBackground.vaguePos = M;
