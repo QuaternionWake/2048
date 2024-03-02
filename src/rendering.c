@@ -159,8 +159,11 @@ void renderScreen(qw_pos blueprint[], int amount, ...){
             if(currentElement->relativeTo == NULL)
                 currentElement->relativeTo = &window;
             positionElement(currentElement);
-            if(currentElement->render == 0)
+            if(currentElement->render == 0){
+                if(currentElement->relativeTo == &window)
+                    currentElement->relativeTo = NULL;
                 continue;
+            }
 
             qw_pos start = {.x = -min(currentElement->absolutePos.x, 0),
                             .y = -min(currentElement->absolutePos.y, 0)};
@@ -180,8 +183,11 @@ void renderScreen(qw_pos blueprint[], int amount, ...){
                     if(currentElement[i][j].relativeTo == NULL)
                         currentElement[i][j].relativeTo = &window;
                     positionElement(&currentElement[i][j]);
-                    if(currentElement[i][j].render == 0)
+                    if(currentElement[i][j].render == 0){
+                        if(currentElement[i][j].relativeTo == &window)
+                            currentElement[i][j].relativeTo = NULL;
                         continue;
+                    }
 
                     qw_pos start = {.x = -min(currentElement[i][j].absolutePos.x, 0),
                                     .y = -min(currentElement[i][j].absolutePos.y, 0)};

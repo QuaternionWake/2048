@@ -1,19 +1,29 @@
 #include "headers/menu-prerendering.h"
 
+#include <stdio.h>
 #include <string.h>
+#include "headers/2048-types.h"
 #include "headers/rendering.h"
 #include "headers/rendering-globals.h"
 
-void prerenderMenu(int selection){
+void prerenderMenu(int selection, int gridSize){
     extern qw_displayElement buttons;
     extern qw_displayElement menuArt;
+    extern qw_displayElement gridSizeDisplay;
     extern qw_displayElement selectionElement;
 
     selectionElement.relativePos.y = selection;
+    {
+        char tempContents[selectionElement.size.x+1];
+        sprintf(tempContents, "%dx%d", gridSize, gridSize);
+        sprintf(tempContents, "%*s", -gridSizeDisplay.size.x, tempContents);
+        char *contents[] = {tempContents};
+        fillElement(gridSizeDisplay, contents); //dear god this section is a mess
+    }
 
     extern qw_pos single;
-    qw_pos blueprint[3] = {single, single, single};
-    renderScreen(blueprint, 3, &buttons, &menuArt, &selectionElement);
+    qw_pos blueprint[4] = {single, single, single, single};
+    renderScreen(blueprint, 4, &buttons, &menuArt, &gridSizeDisplay, &selectionElement);
 }
 
 void initilizeMenuRenderingGlobals(int buttonCount, char *buttonList[]){
@@ -51,14 +61,24 @@ void initilizeMenuRenderingGlobals(int buttonCount, char *buttonList[]){
             fillElement(menuArt, contents);
         }
 
+    extern qw_displayElement gridSizeDisplay;
+        gridSizeDisplay.relativePos.x = strlen(buttonList[0]) + 1;
+        gridSizeDisplay.relativePos.y = 0;
+        gridSizeDisplay.size.x = 5;
+        gridSizeDisplay.size.y = 1;
+        gridSizeDisplay.vaguePos = ITL;
+        gridSizeDisplay.render = 1;
+        gridSizeDisplay.relativeTo = &buttons;
+        allocateElement(&gridSizeDisplay);
+
     extern qw_displayElement selectionElement;
-        selectionElement.relativePos.x = 0,
-        selectionElement.relativePos.y = 0,
-        selectionElement.size.x = 1,
-        selectionElement.size.y = 1,
-        selectionElement.vaguePos = LT,
-        selectionElement.render = 1,
-        selectionElement.relativeTo = &buttons,
+        selectionElement.relativePos.x = 0;
+        selectionElement.relativePos.y = 0;
+        selectionElement.size.x = 1;
+        selectionElement.size.y = 1;
+        selectionElement.vaguePos = LT;
+        selectionElement.render = 1;
+        selectionElement.relativeTo = &buttons;
         allocateElement(&selectionElement);
         {
             char *contents[] = {">"};
@@ -70,12 +90,15 @@ void resetMenuRenderingGlobals(){
     extern qw_displayElement emptyElement;
     extern qw_displayElement buttons;
     extern qw_displayElement menuArt;
+    extern qw_displayElement gridSizeDisplay;
     extern qw_displayElement selectionElement;
 
     freeElement(&buttons);
     buttons = emptyElement;
     freeElement(&menuArt);
     menuArt = emptyElement;
+    freeElement(&gridSizeDisplay);
+    gridSizeDisplay = emptyElement;
     freeElement(&selectionElement);
     selectionElement = emptyElement;
 }
