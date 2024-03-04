@@ -129,9 +129,9 @@ void mainGameLoop(int size, int playfield[size][size]){
         prerenderField(size, playfield, score, gameOver);
 
         if(gameOver){
-            getchar();
+            while(getInput() == NO_INPUT);
             prerenderField(size, playfield, score, 0);
-            getchar();
+            while(getInput() == NO_INPUT);
             break;
         }
     }
