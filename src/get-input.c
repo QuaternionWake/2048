@@ -27,7 +27,7 @@ qw_input getInput(){
         return NO_INPUT;
 
     switch(getchar()){
-        case -1:  return NO_INPUT;
+        case EOF:  return NO_INPUT;
         case 'w': return INPUT_UP;
         case 's': return INPUT_DOWN;
         case 'a': return INPUT_LEFT;
@@ -36,7 +36,7 @@ qw_input getInput(){
         case KEY_ENTER: return INPUT_ENTER;
         case KEY_MULTI_START:
             switch(getchar()){
-                case -1: return INPUT_EXIT;
+                case EOF: return INPUT_EXIT;
                 case KEY_ARROW:
                     switch(getchar()) {
                         case ARROW_UP:    return INPUT_UP;
