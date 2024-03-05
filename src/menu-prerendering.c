@@ -6,7 +6,7 @@
 #include "headers/rendering.h"
 #include "headers/rendering-globals.h"
 
-void prerenderMenu(int selection, int gridSize){
+void prerenderMenu(int selection, int gridSize) {
     extern qw_displayElement buttons;
     extern qw_displayElement menuArt;
     extern qw_displayElement gridSizeDisplay;
@@ -26,19 +26,19 @@ void prerenderMenu(int selection, int gridSize){
     renderScreen(blueprint, 4, &buttons, &menuArt, &gridSizeDisplay, &selectionElement);
 }
 
-void initilizeMenuRenderingGlobals(int buttonCount, char *buttonList[]){
+void initilizeMenuRenderingGlobals(int buttonCount, char *buttonList[]) {
     int i;
     extern qw_displayElement buttons;
         buttons.relativePos.x = 0;
         buttons.relativePos.y = 0;
-        for(i=0; i<buttonCount; i++)
+        for (i=0; i<buttonCount; i++)
             buttons.size.x = max(buttons.size.x, strlen(buttonList[i]));
         buttons.size.y = buttonCount;
         buttons.vaguePos = MB;
         buttons.render = 1;
         buttons.relativeTo = NULL;
         allocateElement(&buttons);
-        for(i=0; i<buttonCount; i++)
+        for (i=0; i<buttonCount; i++)
             strcpy(buttons.contents[i], buttonList[i]);
 
     extern qw_displayElement menuArt;
@@ -86,7 +86,7 @@ void initilizeMenuRenderingGlobals(int buttonCount, char *buttonList[]){
         }
 }
 
-void resetMenuRenderingGlobals(){
+void resetMenuRenderingGlobals() {
     extern qw_displayElement emptyElement;
     extern qw_displayElement buttons;
     extern qw_displayElement menuArt;

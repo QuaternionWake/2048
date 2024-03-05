@@ -7,68 +7,69 @@
 #include "headers/playfield-prerendering.h"
 #include "headers/2048-types.h"
 
-qw_pos randPos(int size, int playfield[size][size]){
+qw_pos randPos(int size, int playfield[size][size]) {
     qw_pos a;
-    do{
+    do {
         a.x = rand() % size;
         a.y = rand() % size;
-    }while(playfield[a.y][a.x]);
+    } while (playfield[a.y][a.x]);
     return a;
 }
 
-void copyPlayfield(int size, int source[size][size], int dest[size][size]){
+void copyPlayfield(int size, int source[size][size], int dest[size][size]) {
     int i, j;
-    for(i=0; i<size; i++)
-        for(j=0; j<size; j++)
+    for (i=0; i<size; i++)
+        for (j=0; j<size; j++)
             dest[i][j] = source[i][j];
 }
 
-void rotateGrid(int size, int playfield[size][size], int rotationsTotal){
+void rotateGrid(int size, int playfield[size][size], int rotationsTotal) {
     int rotatedPlayfield[size][size];
     int i, j;
     int rotationsDone;
-    for(rotationsDone=0; rotationsDone<rotationsTotal; rotationsDone++){
-        for(i=0; i<size; i++)
-            for(j=0; j<size; j++)
+    for (rotationsDone=0; rotationsDone<rotationsTotal; rotationsDone++) {
+        for (i=0; i<size; i++)
+            for (j=0; j<size; j++)
                 rotatedPlayfield[j][size-i-1] = playfield[i][j];
         copyPlayfield(size, rotatedPlayfield, playfield);
     }
 }
 
-int moveGrid(int size, int playfield[size][size], int* score){
+int moveGrid(int size, int playfield[size][size], int *score) {
     int currentX, nextFaller, fallHeight;
     int notMoved = 1;
 
     //merging tiles
-    for(currentX=0; currentX<size; currentX++){
+    for (currentX=0; currentX<size; currentX++) {
         fallHeight = 0;
-        while(!playfield[fallHeight][currentX] && fallHeight<size)
+        while (!playfield[fallHeight][currentX] && fallHeight<size)
             fallHeight++;
-        if(fallHeight >= size-1)
+        if (fallHeight >= size-1)
             continue;
-        for(nextFaller=fallHeight+1; nextFaller<size; nextFaller++)
-            if(playfield[nextFaller][currentX]){
-                if(playfield[fallHeight][currentX] == playfield[nextFaller][currentX]){
+        for (nextFaller=fallHeight+1; nextFaller<size; nextFaller++)
+            if (playfield[nextFaller][currentX]) {
+                if (playfield[fallHeight][currentX] == playfield[nextFaller][currentX]) {
                     *score += powOfTwo(playfield[fallHeight][currentX]);
                     playfield[fallHeight][currentX]++;
                     playfield[nextFaller][currentX] = 0;
                     fallHeight = nextFaller+1;
                     nextFaller++;
                     notMoved = 0;
-                }else
+                } else {
                     fallHeight = nextFaller;
-        }
+                }
+            }
     }
 
     //shifting tiles
-    for(currentX=0; currentX<size; currentX++){
+    for (currentX=0; currentX<size; currentX++) {
         fallHeight = 0;
-        while(playfield[fallHeight][currentX] && fallHeight<size)
+        while (playfield[fallHeight][currentX] && fallHeight<size)
             fallHeight++;
-        if(fallHeight >= size-1)
+        if (fallHeight >= size-1)
             continue;
-        for(nextFaller=fallHeight+1; nextFaller<size; nextFaller++)
-            if(playfield[nextFaller][currentX]){
+        for (nextFaller=fallHeight+1; nextFaller<size; nextFaller++)
+            if (playfield[nextFaller][currentX]) {
                 playfield[fallHeight][currentX] = playfield[nextFaller][currentX];
                 playfield[nextFaller][currentX] = 0;
                 fallHeight++;
@@ -79,43 +80,40 @@ int moveGrid(int size, int playfield[size][size], int* score){
     return notMoved;
 }
 
-int gameOverCheck(int size, int playfield[size][size]){
+int gameOverCheck(int size, int playfield[size][size]) {
     int testPlayfield[size][size];
     int gameOver = 1;
     int dummyScore;
-    copyPlayfield(size, playfield, testPlayfield);
-    gameOver = moveGrid(size, testPlayfield, &dummyScore); if(!gameOver) return 0;
-    rotateGrid(size, testPlayfield, 1); gameOver = moveGrid(size, testPlayfield, &dummyScore); if(!gameOver) return 0;
-    rotateGrid(size, testPlayfield, 1); gameOver = moveGrid(size, testPlayfield, &dummyScore); if(!gameOver) return 0;
-    rotateGrid(size, testPlayfield, 1); gameOver = moveGrid(size, testPlayfield, &dummyScore); if(!gameOver) return 0;
+    copyPlayfield (size, playfield, testPlayfield);
+    gameOver = moveGrid(size, testPlayfield, &dummyScore); if (!gameOver) return 0;
+    rotateGrid(size, testPlayfield, 1); gameOver = moveGrid(size, testPlayfield, &dummyScore); if (!gameOver) return 0;
+    rotateGrid(size, testPlayfield, 1); gameOver = moveGrid(size, testPlayfield, &dummyScore); if (!gameOver) return 0;
+    rotateGrid(size, testPlayfield, 1); gameOver = moveGrid(size, testPlayfield, &dummyScore); if (!gameOver) return 0;
     return 1;
 }
 
-void mainGameLoop(int size, int playfield[size][size]){
+void mainGameLoop(int size, int playfield[size][size]) {
     int invalidInput;
-    int exit = 0;
     int score = 0;
 
-    while(1){
-        do{
+    while (1) {
+        do {
             qw_input move = getInput();
             invalidInput = 0;
-            switch(move){ //non-up moves are transformed into up moves by rotating the playfield
-                case INPUT_EXIT:    exit = 1; break;
-                case INPUT_UP:      invalidInput = moveGrid(size, playfield, &score);   break;
-                case INPUT_LEFT:    rotateGrid(size, playfield, 1); invalidInput = moveGrid(size, playfield, &score); rotateGrid(size, playfield, 3);   break;
-                case INPUT_DOWN:    rotateGrid(size, playfield, 2); invalidInput = moveGrid(size, playfield, &score); rotateGrid(size, playfield, 2);   break;
-                case INPUT_RIGHT:   rotateGrid(size, playfield, 3); invalidInput = moveGrid(size, playfield, &score); rotateGrid(size, playfield, 1);   break;
-                default: invalidInput = 1;
+            switch (move) { //non-up moves are transformed into up moves by rotating the playfield
+            case INPUT_EXIT:    goto Exit;
+            case INPUT_UP:      invalidInput = moveGrid(size, playfield, &score);   break;
+            case INPUT_LEFT:    rotateGrid(size, playfield, 1); invalidInput = moveGrid(size, playfield, &score); rotateGrid(size, playfield, 3);   break;
+            case INPUT_DOWN:    rotateGrid(size, playfield, 2); invalidInput = moveGrid(size, playfield, &score); rotateGrid(size, playfield, 2);   break;
+            case INPUT_RIGHT:   rotateGrid(size, playfield, 3); invalidInput = moveGrid(size, playfield, &score); rotateGrid(size, playfield, 1);   break;
+            default: invalidInput = 1;
             }
-        }while(invalidInput);
-        if(exit)
-            break;
+        } while (invalidInput);
 
         prerenderField(size, playfield, score, 0);
 
         qw_pos a = randPos(size, playfield);
-        if(rand()%5) //chance a tile spawns as a 4 rather than a 2
+        if (rand()%5) //chance a tile spawns as a 4 rather than a 2
             playfield[a.y][a.x] = 1;
         else
             playfield[a.y][a.x] = 2;
@@ -128,21 +126,22 @@ void mainGameLoop(int size, int playfield[size][size]){
         nanosleep(&ts, NULL);
         prerenderField(size, playfield, score, gameOver);
 
-        if(gameOver){
-            while(getInput() == NO_INPUT);
+        if (gameOver){
+            while (getInput() == NO_INPUT);
             prerenderField(size, playfield, score, 0);
-            while(getInput() == NO_INPUT);
+            while (getInput() == NO_INPUT);
             break;
         }
     }
+    Exit:
     resetPlayfieldRenderngGlobals(size);
 }
 
-void initializeGame(int size, int tileSize){
+void initializeGame(int size, int tileSize) {
     int playfield[size][size];
     int i, j;
-    for(i=0; i<size; i++)
-        for(j=0; j<size; j++)
+    for (i=0; i<size; i++)
+        for (j=0; j<size; j++)
             playfield[i][j] = 0;
 
     srand(time(NULL));

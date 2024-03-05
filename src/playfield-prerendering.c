@@ -6,31 +6,31 @@
 #include "headers/2048-types.h"
 #include "headers/rendering-globals.h"
 
-int numLen(int num){
+int numLen(int num) {
     int len = 0;
-    while(num){
+    while (num) {
         len++;
         num/=10;
     }
     return len;
 }
 
-int powOfTwo(int n){
+int powOfTwo(int n) {
     int i;
     int res = 1;
-    for(i=0; i<n; i++)
+    for (i=0; i<n; i++)
         res*=2;
     return res;
 }
 
     //TODO replace this with hadrcoded strings
-void drawTile(qw_displayElement *tile, int tileContentNum){
+void drawTile(qw_displayElement *tile, int tileContentNum) {
     int i, j;
-    for(i=0; i<tile->size.y; i++)
-        for(j=0; j<tile->size.x; j++)
+    for (i=0; i<tile->size.y; i++)
+        for (j=0; j<tile->size.x; j++)
             tile->contents[i][j] = ' ';
 
-    if(!tileContentNum)
+    if (!tileContentNum)
         return;
 
     int digitCount = numLen(powOfTwo(tileContentNum));
@@ -42,18 +42,18 @@ void drawTile(qw_displayElement *tile, int tileContentNum){
                          .y=(tile->size.y-rows)/2};
 
     int digit = 0;
-    if(partialRow){
-        for(i=printStart.x; digit<partialRow; i++)
+    if (partialRow) {
+        for (i=printStart.x; digit<partialRow; i++)
             tile->contents[printStart.y][i] = tileContentStr[digit++];
         printStart.y++;
     }
 
-    for(i=printStart.y; digit<digitCount; i++)
-        for(j=0; j<tile->size.x; j++)
+    for (i=printStart.y; digit<digitCount; i++)
+        for (j=0; j<tile->size.x; j++)
             tile->contents[i][j] = tileContentStr[digit++];
 }
 
-void prerenderField(int gridSize, int playfield[gridSize][gridSize], int score, char gameOver){
+void prerenderField(int gridSize, int playfield[gridSize][gridSize], int score, char gameOver) {
     int i, j;
     extern qw_displayElement playfieldBackground;
     extern qw_displayElement **playfieldTiles;
@@ -62,8 +62,8 @@ void prerenderField(int gridSize, int playfield[gridSize][gridSize], int score, 
     extern qw_displayElement scoreDisplay;
     extern qw_displayElement gameOverText;
 
-    for(i=0; i<gridSize; i++)
-        for(j=0; j<gridSize; j++)
+    for (i=0; i<gridSize; i++)
+        for (j=0; j<gridSize; j++)
             drawTile(&playfieldTiles[i][j], playfield[i][j]);
 
     //score display
@@ -83,7 +83,7 @@ void prerenderField(int gridSize, int playfield[gridSize][gridSize], int score, 
     renderScreen(blueprint, 6, &playfieldBackground, playfieldTiles, &infoPad, &infoPadArt, &scoreDisplay, &gameOverText);
 }
 
-void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted){
+void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted) {
     int i, j;
     qw_pos tileSize = {.x = tileSizeUnadjusted*2+1,
                        .y = tileSizeUnadjusted+1};
@@ -98,29 +98,29 @@ void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted){
         playfieldBackground.relativeTo = NULL;
         allocateElement(&playfieldBackground);
 
-    for(i=0; i<playfieldBackground.size.y; i++)
-        for(j=0; j<playfieldBackground.size.x; j++)
+    for (i=0; i<playfieldBackground.size.y; i++)
+        for (j=0; j<playfieldBackground.size.x; j++)
             playfieldBackground.contents[i][j] = ' ';
 
-    for(i=0; i<playfieldBackground.size.y; i+=tileSize.y)
-        for(j=0; j<playfieldBackground.size.x; j++)
+    for (i=0; i<playfieldBackground.size.y; i+=tileSize.y)
+        for (j=0; j<playfieldBackground.size.x; j++)
             playfieldBackground.contents[i][j] = '-';
 
-    for(i=0; i<playfieldBackground.size.y; i++)
-        for(j=0; j<playfieldBackground.size.x; j+=tileSize.x)
+    for (i=0; i<playfieldBackground.size.y; i++)
+        for (j=0; j<playfieldBackground.size.x; j+=tileSize.x)
             playfieldBackground.contents[i][j] = '|';
 
-    for(i=0; i<playfieldBackground.size.y; i+=tileSize.y)
-        for(j=0; j<playfieldBackground.size.x; j+=tileSize.x)
+    for (i=0; i<playfieldBackground.size.y; i+=tileSize.y)
+        for (j=0; j<playfieldBackground.size.x; j+=tileSize.x)
             playfieldBackground.contents[i][j] = '+';
 
     extern qw_displayElement **playfieldTiles;
     playfieldTiles = (qw_displayElement**)malloc(gridSize*sizeof(qw_displayElement*));
-    for(i=0; i<gridSize; i++)
+    for (i=0; i<gridSize; i++)
         playfieldTiles[i] = (qw_displayElement*)malloc(gridSize*sizeof(qw_displayElement));
 
-    for(i=0; i<gridSize; i++)
-        for(j=0; j<gridSize; j++){
+    for (i=0; i<gridSize; i++)
+        for (j=0; j<gridSize; j++) {
             playfieldTiles[i][j].relativePos.x = j*tileSize.x + 2;
             playfieldTiles[i][j].relativePos.y = i*tileSize.y + 2;
             playfieldTiles[i][j].size.x = tileSize.x-3;
@@ -191,7 +191,7 @@ void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted){
         }
 }
 
-void resetPlayfieldRenderngGlobals(int gridSize){
+void resetPlayfieldRenderngGlobals(int gridSize) {
     int i, j;
     extern qw_displayElement emptyElement;
     extern qw_displayElement **playfieldTiles;
@@ -200,12 +200,12 @@ void resetPlayfieldRenderngGlobals(int gridSize){
     extern qw_displayElement infoPadArt;
     extern qw_displayElement scoreDisplay;
     extern qw_displayElement gameOverText;
-    for(i=0; i<gridSize; i++)
-        for(j=0; j<gridSize; j++){
+    for (i=0; i<gridSize; i++)
+        for (j=0; j<gridSize; j++) {
             freeElement(&playfieldTiles[i][j]);
             playfieldTiles[i][j] = emptyElement;
         }
-    for(i=0; i<gridSize; i++)
+    for (i=0; i<gridSize; i++)
         free(playfieldTiles[i]);
     free(playfieldTiles);
     freeElement(&playfieldBackground);

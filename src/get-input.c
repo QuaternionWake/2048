@@ -14,7 +14,7 @@
 #define ARROW_LEFT 68
 #define KEY_BACKSPACE 127
 
-int dontWaitForInput(){
+int dontWaitForInput() {
     struct timeval timeout = {0, 10*1000};
     fd_set set;
     FD_ZERO(&set);
@@ -22,29 +22,30 @@ int dontWaitForInput(){
     return select(1, &set, NULL, NULL, &timeout);
 }
 
-qw_input getInput(){
-    if(dontWaitForInput() == 0)
+qw_input getInput() {
+    if (dontWaitForInput() == 0)
         return NO_INPUT;
 
-    switch(getchar()){
-        case EOF:  return NO_INPUT;
-        case 'w': return INPUT_UP;
-        case 's': return INPUT_DOWN;
-        case 'a': return INPUT_LEFT;
-        case 'd': return INPUT_RIGHT;
-        case 'e': return INPUT_ENTER;
-        case KEY_ENTER: return INPUT_ENTER;
-        case KEY_MULTI_START:
-            switch(getchar()){
-                case EOF: return INPUT_EXIT;
-                case KEY_ARROW:
-                    switch(getchar()) {
-                        case ARROW_UP:    return INPUT_UP;
-                        case ARROW_DOWN:  return INPUT_DOWN;
-                        case ARROW_RIGHT: return INPUT_RIGHT;
-                        case ARROW_LEFT:  return INPUT_LEFT;
-                    }
+    switch (getchar()) {
+    case EOF: return NO_INPUT;
+    case 'w': return INPUT_UP;
+    case 's': return INPUT_DOWN;
+    case 'a': return INPUT_LEFT;
+    case 'd': return INPUT_RIGHT;
+    case 'e': return INPUT_ENTER;
+    case KEY_ENTER: return INPUT_ENTER;
+    case KEY_MULTI_START:
+        switch (getchar()) {
+        case EOF: return INPUT_EXIT;
+        case KEY_ARROW:
+            switch (getchar()) {
+            case ARROW_UP:    return INPUT_UP;
+            case ARROW_DOWN:  return INPUT_DOWN;
+            case ARROW_RIGHT: return INPUT_RIGHT;
+            case ARROW_LEFT:  return INPUT_LEFT;
             }
+        }
     }
+
     return NO_INPUT;
 }

@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include "headers/menus.h"
 
-int main(int argc, char const *argv[]){
+int main(int argc, char const *argv[]) {
     static struct termios oldTermios, newTermios;
     tcgetattr(STDIN_FILENO, &oldTermios);
     fcntl(0, F_SETFL, O_NONBLOCK);
