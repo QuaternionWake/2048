@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include "headers/rendering.h"
 #include "headers/2048-types.h"
-#include "headers/rendering-globals.h"
 
 int numLen(int num) {
     int len = 0;

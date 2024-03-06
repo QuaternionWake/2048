@@ -4,7 +4,6 @@
 #include <string.h>
 #include "headers/2048-types.h"
 #include "headers/rendering.h"
-#include "headers/rendering-globals.h"
 
 void prerenderMenu(int selection, int gridSize) {
     extern qw_displayElement buttons;
