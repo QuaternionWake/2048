@@ -3,7 +3,7 @@
 
 #include "2048-types.h"
 
-qw_pos randPos(int size, int playfield[size][size]);
+qw_vec2 randVec2(int size, int playfield[size][size]);
 void copyPlayfield(int size, int playfield[size][size], int copiedPlayfield[size][size]);
 void rotateGrid(int size, int playfield[size][size], int rotationsTotal);
 int moveGrid(int size, int playfield[size][size], int *score);

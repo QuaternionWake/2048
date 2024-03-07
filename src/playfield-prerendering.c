@@ -37,7 +37,7 @@ void drawTile(qw_displayElement *tile, int tileContentNum) {
     int partialRow = digitCount%tile->size.x;
     char tileContentStr[digitCount+1];
     sprintf(tileContentStr, "%d", powOfTwo(tileContentNum));
-    qw_pos printStart = {.x=(tile->size.x-partialRow)/2,
+    qw_vec2 printStart = {.x=(tile->size.x-partialRow)/2,
                          .y=(tile->size.y-rows)/2};
 
     int digit = 0;
@@ -77,14 +77,14 @@ void prerenderField(int gridSize, int playfield[gridSize][gridSize], int score, 
 
     gameOverText.render = gameOver;
 
-    extern qw_pos single;
-    qw_pos blueprint[6] = {single, {.x=gridSize, .y=gridSize}, single, single, single, single};
+    extern qw_vec2 single;
+    qw_vec2 blueprint[6] = {single, {.x=gridSize, .y=gridSize}, single, single, single, single};
     renderScreen(blueprint, 6, &playfieldBackground, playfieldTiles, &infoPad, &infoPadArt, &scoreDisplay, &gameOverText);
 }
 
 void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted) {
     int i, j;
-    qw_pos tileSize = {.x = tileSizeUnadjusted*2+1,
+    qw_vec2 tileSize = {.x = tileSizeUnadjusted*2+1,
                        .y = tileSizeUnadjusted+1};
 
     extern qw_displayElement playfieldBackground;

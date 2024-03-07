@@ -7,8 +7,8 @@
 #include "headers/playfield-prerendering.h"
 #include "headers/2048-types.h"
 
-qw_pos randPos(int size, int playfield[size][size]) {
-    qw_pos a;
+qw_vec2 randVec2(int size, int playfield[size][size]) {
+    qw_vec2 a;
     do {
         a.x = rand() % size;
         a.y = rand() % size;
@@ -112,7 +112,7 @@ void mainGameLoop(int size, int playfield[size][size]) {
 
         prerenderField(size, playfield, score, 0);
 
-        qw_pos a = randPos(size, playfield);
+        qw_vec2 a = randVec2(size, playfield);
         if (rand()%5) //chance a tile spawns as a 4 rather than a 2
             playfield[a.y][a.x] = 1;
         else
@@ -145,10 +145,10 @@ void initializeGame(int size, int tileSize) {
             playfield[i][j] = 0;
 
     srand(time(NULL));
-    qw_pos a;
-    a = randPos(size, playfield); //starting two tiles
+    qw_vec2 a;
+    a = randVec2(size, playfield); //starting two tiles
     playfield[a.y][a.x] = 1;
-    a = randPos(size, playfield);
+    a = randVec2(size, playfield);
     playfield[a.y][a.x] = 1;
 
     initilizePlayfieldRenderingGlobals(size, tileSize);

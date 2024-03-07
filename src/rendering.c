@@ -16,11 +16,11 @@
 #define alignElementBtmInt(VAR) element->absolutePos.VAR = element->relativeTo->absolutePos.VAR + element->relativePos.VAR + element->relativeTo->size.VAR - element->size.VAR
 #define alignElementBtmExt(VAR) element->absolutePos.VAR = element->relativeTo->absolutePos.VAR + element->relativePos.VAR + element->relativeTo->size.VAR
 
-qw_pos getScreenSize() {
+qw_vec2 getScreenSize() {
     struct winsize w;
     ioctl(0, TIOCGWINSZ, &w);
 
-    qw_pos screenSize = {.x=w.ws_col, .y=w.ws_row};
+    qw_vec2 screenSize = {.x=w.ws_col, .y=w.ws_row};
 
     return screenSize;
 }
@@ -129,7 +129,7 @@ void positionElement(qw_displayElement *element) {
      * one might have placed down, basically; elements given later in the list
      * are renendered over those given earlier.
      */
-void renderScreen(qw_pos blueprint[], int amount, ...) {
+void renderScreen(qw_vec2 blueprint[], int amount, ...) {
     va_list elements;
     va_start(elements, amount);
 
@@ -165,9 +165,9 @@ void renderScreen(qw_pos blueprint[], int amount, ...) {
                 continue;
             }
 
-            qw_pos start = {.x = -min(currentElement->absolutePos.x, 0),
+            qw_vec2 start = {.x = -min(currentElement->absolutePos.x, 0),
                             .y = -min(currentElement->absolutePos.y, 0)};
-            qw_pos end = {.x = min(currentElement->absolutePos.x + currentElement->size.x, window.size.x) - currentElement->absolutePos.x,
+            qw_vec2 end = {.x = min(currentElement->absolutePos.x + currentElement->size.x, window.size.x) - currentElement->absolutePos.x,
                           .y = min(currentElement->absolutePos.y + currentElement->size.y, window.size.y) - currentElement->absolutePos.y};
             for (k=start.y; k<end.y; k++)
                 for (l=start.x; l<end.x; l++)
@@ -189,9 +189,9 @@ void renderScreen(qw_pos blueprint[], int amount, ...) {
                         continue;
                     }
 
-                    qw_pos start = {.x = -min(currentElement[i][j].absolutePos.x, 0),
+                    qw_vec2 start = {.x = -min(currentElement[i][j].absolutePos.x, 0),
                                     .y = -min(currentElement[i][j].absolutePos.y, 0)};
-                    qw_pos end = {.x = min(currentElement[i][j].absolutePos.x + currentElement[i][j].size.x, window.size.x) - currentElement[i][j].absolutePos.x,
+                    qw_vec2 end = {.x = min(currentElement[i][j].absolutePos.x + currentElement[i][j].size.x, window.size.x) - currentElement[i][j].absolutePos.x,
                                   .y = min(currentElement[i][j].absolutePos.y + currentElement[i][j].size.y, window.size.y) - currentElement[i][j].absolutePos.y};
                     for (k=start.y; k<end.y; k++)
                         for (l=start.x; l<end.x; l++)

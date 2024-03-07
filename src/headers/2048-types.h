@@ -3,7 +3,7 @@
 
 typedef enum input qw_input;
 typedef enum vaguePos qw_vaguePos;
-typedef struct pos qw_pos;
+typedef struct vec2 qw_vec2;
 typedef struct displayElement qw_displayElement;
 
 enum input {NO_INPUT, INPUT_UP, INPUT_DOWN, INPUT_LEFT, INPUT_RIGHT, INPUT_EXIT, INPUT_ENTER};
@@ -18,7 +18,7 @@ enum vaguePos {TLC,    TL,   TML,  TM,   TMR,   TR,    TRC,
 
                BLC,    BL,   BML,  BM,   BMR,   BR,    BRC};
 
-struct pos {
+struct vec2 {
     short x;
     short y;
 };
@@ -26,9 +26,9 @@ struct pos {
 struct displayElement {
     qw_vaguePos vaguePos;
     qw_displayElement *relativeTo;
-    qw_pos relativePos;
-    qw_pos absolutePos;
-    qw_pos size;
+    qw_vec2 relativePos;
+    qw_vec2 absolutePos;
+    qw_vec2 size;
     char render;
     char **contents;
 };

@@ -20,8 +20,8 @@ void prerenderMenu(int selection, int gridSize) {
         fillElement(gridSizeDisplay, contents); //dear god this section is a mess
     }
 
-    extern qw_pos single;
-    qw_pos blueprint[4] = {single, single, single, single};
+    extern qw_vec2 single;
+    qw_vec2 blueprint[4] = {single, single, single, single};
     renderScreen(blueprint, 4, &buttons, &menuArt, &gridSizeDisplay, &selectionElement);
 }
 
