@@ -6,6 +6,7 @@
 #include "headers/get-input.h"
 #include "headers/playfield-prerendering.h"
 #include "headers/2048-types.h"
+#include "headers/qw_utils.h"
 
 qw_vec2 randVec2(int size, int playfield[size][size]) {
     qw_vec2 a;
