@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <sys/ioctl.h>
 #include "headers/2048-types.h"
+#include "headers/qw_utils.h"
 
 #include <unistd.h>
 

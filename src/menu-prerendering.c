@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "headers/2048-types.h"
+#include "headers/qw_utils.h"
 #include "headers/rendering.h"
 
 void prerenderMenu(int selection, int gridSize) {

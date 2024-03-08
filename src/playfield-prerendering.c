@@ -4,23 +4,7 @@
 #include <stdlib.h>
 #include "headers/rendering.h"
 #include "headers/2048-types.h"
-
-int numLen(int num) {
-    int len = 0;
-    while (num) {
-        len++;
-        num/=10;
-    }
-    return len;
-}
-
-int powOfTwo(int n) {
-    int i;
-    int res = 1;
-    for (i=0; i<n; i++)
-        res*=2;
-    return res;
-}
+#include "headers/qw_utils.h"
 
     //TODO replace this with hadrcoded strings
 void drawTile(qw_displayElement *tile, int tileContentNum) {

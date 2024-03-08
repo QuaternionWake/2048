@@ -10,8 +10,6 @@ static qw_displayElement infoPadArt;
 static qw_displayElement scoreDisplay;
 static qw_displayElement gameOverText;
 
-int numLen(int num);
-int powOfTwo(int n);
 void drawTile(qw_displayElement *tile, int tileContentNum);
 void prerenderField(int gridSize, int playfield[gridSize][gridSize], int score, char gameOver);
 void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted);
