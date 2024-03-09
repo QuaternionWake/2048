@@ -5,6 +5,7 @@
 #include "headers/rendering.h"
 #include "headers/2048-types.h"
 #include "headers/qw_utils.h"
+#include "headers/scores.h"
 
     //TODO replace this with hadrcoded strings
 void drawTile(qw_displayElement *tile, int tileContentNum) {
@@ -49,13 +50,25 @@ void prerenderField(int gridSize, int playfield[gridSize][gridSize], int score, 
         for (j=0; j<gridSize; j++)
             drawTile(&playfieldTiles[i][j], playfield[i][j]);
 
-    //score display
-    //TODO add max score
+    static int bestScore = 0;
+    static int lastGridSize = 0;
+    if (lastGridSize != gridSize) {
+        lastGridSize = gridSize;
+        bestScore = getBestScore(gridSize);
+    }
+    bestScore = max(bestScore, score);
     {
-        char scoreStr[scoreDisplay.size.x+1];
-        sprintf(scoreStr, "score: %d", score);
-        sprintf(scoreStr, "%*s", -scoreDisplay.size.x, scoreStr);
-        char *contents[] = {scoreStr};
+        char scoreStr1[scoreDisplay.size.x+1];
+        char scoreStr2[scoreDisplay.size.x+1];
+        sprintf(scoreStr1, "%d", score);
+        sprintf(scoreStr2, "Score: %*s", -scoreDisplay.size.x, scoreStr1);
+
+        char bestScoreStr1[scoreDisplay.size.x+1];
+        char bestScoreStr2[scoreDisplay.size.x+1];
+        sprintf(bestScoreStr1, "%d", bestScore);
+        sprintf(bestScoreStr2, " Best: %*s", -scoreDisplay.size.x, bestScoreStr1);
+
+        char *contents[] = {scoreStr2, bestScoreStr2};
         fillElement(scoreDisplay, contents);
     }
 
@@ -146,8 +159,8 @@ void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted) {
     extern qw_displayElement scoreDisplay;
         scoreDisplay.relativePos.x = 0;
         scoreDisplay.relativePos.y = 1;
-        scoreDisplay.size.x = 20; //TODO
-        scoreDisplay.size.y = 1; //TODO
+        scoreDisplay.size.x = 24; //TODO
+        scoreDisplay.size.y = 2; //TODO
         scoreDisplay.vaguePos = BR;
         scoreDisplay.render = 1;
         scoreDisplay.relativeTo = &infoPadArt;

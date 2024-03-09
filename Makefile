@@ -5,7 +5,8 @@ obj_files := tempfiles/2048.o \
 			 tempfiles/menus.o \
 			 tempfiles/playfield-prerendering.o \
 			 tempfiles/menu-prerendering.o \
-			 tempfiles/qw_utils.o
+			 tempfiles/qw_utils.o \
+			 tempfiles/scores.o
 
 2048: tempfiles $(obj_files)
 	gcc $(obj_files) -o 2048
@@ -35,6 +36,9 @@ tempfiles/menu-prerendering.o: src/menu-prerendering.c
 	gcc -c $? -o $@
 
 tempfiles/qw_utils.o: src/qw_utils.c
+	gcc -c $? -o $@
+
+tempfiles/scores.o: src/scores.c
 	gcc -c $? -o $@
 
 run: 2048

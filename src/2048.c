@@ -5,6 +5,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include "headers/menus.h"
+#include "headers/scores.h"
 
 int main(int argc, char const *argv[]) {
     static struct termios oldTermios, newTermios;
@@ -16,6 +17,7 @@ int main(int argc, char const *argv[]) {
     tcsetattr(STDIN_FILENO, TCSANOW, &newTermios);
     printf("\033[?25l"); //hides cursor
 
+    initScoreSystem();
     mainMenu();
 
     printf("\033[?25h"); //unhides cursor

@@ -7,6 +7,7 @@
 #include "headers/playfield-prerendering.h"
 #include "headers/2048-types.h"
 #include "headers/qw_utils.h"
+#include "headers/scores.h"
 
 qw_vec2 randVec2(int size, int playfield[size][size]) {
     qw_vec2 a;
@@ -135,6 +136,7 @@ void mainGameLoop(int size, int playfield[size][size]) {
         }
     }
     Exit:
+    addScore(size, score);
     resetPlayfieldRenderngGlobals(size);
 }
 
