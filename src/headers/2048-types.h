@@ -6,7 +6,7 @@ typedef enum vaguePos qw_vaguePos;
 typedef struct vec2 qw_vec2;
 typedef struct displayElement qw_displayElement;
 
-enum input {NO_INPUT, INPUT_UP, INPUT_DOWN, INPUT_LEFT, INPUT_RIGHT, INPUT_EXIT, INPUT_ENTER};
+enum input {NO_INPUT, INPUT_UP, INPUT_DOWN, INPUT_LEFT, INPUT_RIGHT, INPUT_EXIT, INPUT_CONFIRM, INPUT_SWITCH};
 
 enum vaguePos {TLC,    TL,   TML,  TM,   TMR,   TR,    TRC,
 

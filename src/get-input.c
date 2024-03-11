@@ -13,6 +13,7 @@
 #define ARROW_RIGHT 67
 #define ARROW_LEFT 68
 #define KEY_BACKSPACE 127
+#define KEY_TAB 11
 
 qw_input getInput() {
     if (dontWaitForInput() == 0)
@@ -24,8 +25,9 @@ qw_input getInput() {
     case 's': return INPUT_DOWN;
     case 'a': return INPUT_LEFT;
     case 'd': return INPUT_RIGHT;
-    case 'e': return INPUT_ENTER;
-    case KEY_ENTER: return INPUT_ENTER;
+    case 'e': return INPUT_CONFIRM;
+    case KEY_ENTER: return INPUT_CONFIRM;
+    case KEY_TAB:   return INPUT_SWITCH;
     case KEY_MULTI_START:
         switch (getchar()) {
         case EOF: return INPUT_EXIT;

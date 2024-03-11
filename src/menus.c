@@ -27,7 +27,7 @@ void mainMenu() {
         case INPUT_DOWN:  if (selection<buttonCount-1)         selection++; break;
         case INPUT_LEFT:  if (selection == 0 && gridSize > 3)  gridSize--; break;
         case INPUT_RIGHT: if (selection == 0 && gridSize < 10) gridSize++; break;
-        case INPUT_ENTER:
+        case INPUT_CONFIRM:
             switch (selection) {
             case 0: initializeGame(gridSize, 5);   break;
             case 1: printf("\033[H\033[J\n\tScore saving coming soom I pwomise :3\n"); while(getInput() == NO_INPUT); break;
