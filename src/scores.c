@@ -10,6 +10,15 @@
 FILE *scoresFile = NULL;
 qw_list scoreLists[11];
 
+void initScoreSystem() {
+    int i;
+    openScoresFile();
+    for(i=2; i<=10; i++){
+        scoreLists[i] = newList();
+    }
+    getScoresFromFile();
+}
+
 void openScoresFile() {
     char scoreFilePath[PATH_MAX];
     strcpy(scoreFilePath, getenv("HOME"));
@@ -23,13 +32,7 @@ void openScoresFile() {
         exit(EXIT_FAILURE);
 }
 
-void addScore(int playfieldSize, int score) {
-    addToList(&scoreLists[playfieldSize], score);
-    fprintf(scoresFile, "%d %d\n", playfieldSize, score);
-    fflush(scoresFile);
-}
-
-void getScores() {
+void getScoresFromFile() {
     rewind(scoresFile);
     while (1) {
         int currSize, currScore;
@@ -39,23 +42,20 @@ void getScores() {
     }
 }
 
+void deinitScoreSystem() {
+    fclose(scoresFile);
+}
+
+void addScore(int playfieldSize, int score) {
+    addToList(&scoreLists[playfieldSize], score);
+    fprintf(scoresFile, "%d %d\n", playfieldSize, score);
+    fflush(scoresFile);
+}
+
 int getBestScore(int playfieldSize) {
     int i;
     int bestScore = 0;
     for (i=0; i<scoreLists[playfieldSize].size; i++)
         bestScore = max(scoreLists[playfieldSize].values[i], bestScore);
     return bestScore;
-}
-
-void initScoreSystem() {
-    int i;
-    openScoresFile();
-    for(i=2; i<=10; i++){
-        scoreLists[i] = newList();
-    }
-    getScores();
-}
-
-void deinitScoreSystem() {
-    fclose(scoresFile);
 }

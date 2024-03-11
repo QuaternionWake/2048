@@ -3,10 +3,11 @@
 
 #include "qw_utils.h"
 
-void openScoresFile();
-void addScore(int playfieldSize, int score);
-void getScores();
-int getBestScore(int playfieldSize);
 void initScoreSystem();
+void openScoresFile();
+void getScoresFromFile();
+void deinitScoreSystem();
+void addScore(int playfieldSize, int score);
+int getBestScore(int playfieldSize);
 
 #endif

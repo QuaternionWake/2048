@@ -4,5 +4,6 @@
 #include "2048-types.h"
 
 qw_input getInput();
+int dontWaitForInput();
 
 #endif

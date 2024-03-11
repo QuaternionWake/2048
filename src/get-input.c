@@ -14,14 +14,6 @@
 #define ARROW_LEFT 68
 #define KEY_BACKSPACE 127
 
-int dontWaitForInput() {
-    struct timeval timeout = {0, 10*1000};
-    fd_set set;
-    FD_ZERO(&set);
-    FD_SET(0, &set);
-    return select(1, &set, NULL, NULL, &timeout);
-}
-
 qw_input getInput() {
     if (dontWaitForInput() == 0)
         return NO_INPUT;
@@ -48,4 +40,12 @@ qw_input getInput() {
     }
 
     return NO_INPUT;
+}
+
+int dontWaitForInput() {
+    struct timeval timeout = {0, 10*1000};
+    fd_set set;
+    FD_ZERO(&set);
+    FD_SET(0, &set);
+    return select(1, &set, NULL, NULL, &timeout);
 }

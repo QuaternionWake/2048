@@ -7,36 +7,6 @@
 #include "headers/qw_utils.h"
 #include "headers/scores.h"
 
-    //TODO replace this with hadrcoded strings
-void drawTile(qw_displayElement *tile, int tileContentNum) {
-    int i, j;
-    for (i=0; i<tile->size.y; i++)
-        for (j=0; j<tile->size.x; j++)
-            tile->contents[i][j] = ' ';
-
-    if (!tileContentNum)
-        return;
-
-    int digitCount = numLen(powOfTwo(tileContentNum));
-    int rows = digitCount/tile->size.x + !!(digitCount%tile->size.x);
-    int partialRow = digitCount%tile->size.x;
-    char tileContentStr[digitCount+1];
-    sprintf(tileContentStr, "%d", powOfTwo(tileContentNum));
-    qw_vec2 printStart = {.x=(tile->size.x-partialRow)/2,
-                         .y=(tile->size.y-rows)/2};
-
-    int digit = 0;
-    if (partialRow) {
-        for (i=printStart.x; digit<partialRow; i++)
-            tile->contents[printStart.y][i] = tileContentStr[digit++];
-        printStart.y++;
-    }
-
-    for (i=printStart.y; digit<digitCount; i++)
-        for (j=0; j<tile->size.x; j++)
-            tile->contents[i][j] = tileContentStr[digit++];
-}
-
 void prerenderField(int gridSize, int playfield[gridSize][gridSize], int score, char gameOver) {
     int i, j;
     extern qw_displayElement playfieldBackground;
@@ -77,6 +47,36 @@ void prerenderField(int gridSize, int playfield[gridSize][gridSize], int score, 
     extern qw_vec2 single;
     qw_vec2 blueprint[6] = {single, {.x=gridSize, .y=gridSize}, single, single, single, single};
     renderScreen(blueprint, 6, &playfieldBackground, playfieldTiles, &infoPad, &infoPadArt, &scoreDisplay, &gameOverText);
+}
+
+    //TODO replace this with hadrcoded strings
+void drawTile(qw_displayElement *tile, int tileContentNum) {
+    int i, j;
+    for (i=0; i<tile->size.y; i++)
+        for (j=0; j<tile->size.x; j++)
+            tile->contents[i][j] = ' ';
+
+    if (!tileContentNum)
+        return;
+
+    int digitCount = numLen(powOfTwo(tileContentNum));
+    int rows = digitCount/tile->size.x + !!(digitCount%tile->size.x);
+    int partialRow = digitCount%tile->size.x;
+    char tileContentStr[digitCount+1];
+    sprintf(tileContentStr, "%d", powOfTwo(tileContentNum));
+    qw_vec2 printStart = {.x=(tile->size.x-partialRow)/2,
+                         .y=(tile->size.y-rows)/2};
+
+    int digit = 0;
+    if (partialRow) {
+        for (i=printStart.x; digit<partialRow; i++)
+            tile->contents[printStart.y][i] = tileContentStr[digit++];
+        printStart.y++;
+    }
+
+    for (i=printStart.y; digit<digitCount; i++)
+        for (j=0; j<tile->size.x; j++)
+            tile->contents[i][j] = tileContentStr[digit++];
 }
 
 void initilizePlayfieldRenderingGlobals(int gridSize, int tileSizeUnadjusted) {

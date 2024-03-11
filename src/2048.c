@@ -19,6 +19,7 @@ int main(int argc, char const *argv[]) {
 
     initScoreSystem();
     mainMenu();
+    deinitScoreSystem();
 
     printf("\033[?25h"); //unhides cursor
     tcsetattr(STDIN_FILENO, TCSANOW, &oldTermios);

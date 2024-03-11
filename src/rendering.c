@@ -17,110 +17,6 @@
 #define alignElementBtmInt(VAR) element->absolutePos.VAR = element->relativeTo->absolutePos.VAR + element->relativePos.VAR + element->relativeTo->size.VAR - element->size.VAR
 #define alignElementBtmExt(VAR) element->absolutePos.VAR = element->relativeTo->absolutePos.VAR + element->relativePos.VAR + element->relativeTo->size.VAR
 
-qw_vec2 getScreenSize() {
-    struct winsize w;
-    ioctl(0, TIOCGWINSZ, &w);
-
-    qw_vec2 screenSize = {.x=w.ws_col, .y=w.ws_row};
-
-    return screenSize;
-}
-
-void allocateElement(qw_displayElement *element) {
-    int i;
-
-    element->contents = (char**)malloc(sizeof(char*)*element->size.y);
-    if (element->contents==NULL) {
-        printf("ERROR: Could not allocate memory");
-        exit(EXIT_FAILURE);
-    }
-
-    for (i=0; i<element->size.y; i++) {
-        element->contents[i] = (char*)malloc(sizeof(char)*element->size.x);
-        if (element->contents[i]==NULL) {
-            printf("ERROR: Could not allocate memory");
-            exit(EXIT_FAILURE);
-        }
-    }
-}
-
-void freeElement(qw_displayElement *element) {
-    int i;
-
-    for (i=0; i<element->size.y; i++)
-        free(element->contents[i]);
-
-    free(element->contents);
-}
-
-void fillElement(qw_displayElement element, char *contents[element.size.x]) {
-    int i, j;
-    for (i=0; i<element.size.y; i++)
-        for (j=0; j<element.size.x; j++)
-            element.contents[i][j] = contents[i][j];
-}
-
-void positionElement(qw_displayElement *element) {
-    switch (element->vaguePos) {  //Tremble before the ALMIGHTY SWITCH CASE
-
-    case TLC:   alignElementTopExt(y);  alignElementTopExt(x);  break;
-    case TL:    alignElementTopExt(y);  alignElementTopInt(x);  break;
-    case TML:   alignElementTopExt(y);  alignElementTopMid(x);  break;
-    case TM:    alignElementTopExt(y);  alignElementMiddle(x);  break;
-    case TMR:   alignElementTopExt(y);  alignElementBtmMid(x);  break;
-    case TR:    alignElementTopExt(y);  alignElementBtmInt(x);  break;
-    case TRC:   alignElementTopExt(y);  alignElementBtmExt(x);  break;
-
-    case LT:    alignElementTopInt(y);  alignElementTopExt(x);  break;
-    case ITL:   alignElementTopInt(y);  alignElementTopInt(x);  break;
-    case ITML:  alignElementTopInt(y);  alignElementTopMid(x);  break;
-    case ITM:   alignElementTopInt(y);  alignElementMiddle(x);  break;
-    case ITMR:  alignElementTopInt(y);  alignElementBtmMid(x);  break;
-    case ITR:   alignElementTopInt(y);  alignElementBtmInt(x);  break;
-    case RT:    alignElementTopInt(y);  alignElementBtmExt(x);  break;
-
-    case LMT:   alignElementTopMid(y);  alignElementTopExt(x);  break;
-    case ILMT:  alignElementTopMid(y);  alignElementTopInt(x);  break;
-    case MTL:   alignElementTopMid(y);  alignElementTopMid(x);  break;
-    case MT:    alignElementTopMid(y);  alignElementMiddle(x);  break;
-    case MTR:   alignElementTopMid(y);  alignElementBtmMid(x);  break;
-    case IRMT:  alignElementTopMid(y);  alignElementBtmInt(x);  break;
-    case RMT:   alignElementTopMid(y);  alignElementBtmExt(x);  break;
-
-    case LM:    alignElementMiddle(y);  alignElementTopExt(x);  break;
-    case ILM:   alignElementMiddle(y);  alignElementTopInt(x);  break;
-    case ML:    alignElementMiddle(y);  alignElementTopMid(x);  break;
-    case M:     alignElementMiddle(y);  alignElementMiddle(x);  break;
-    case MR:    alignElementMiddle(y);  alignElementBtmMid(x);  break;
-    case IRM:   alignElementMiddle(y);  alignElementBtmInt(x);  break;
-    case RM:    alignElementMiddle(y);  alignElementBtmExt(x);  break;
-
-    case LMB:   alignElementBtmMid(y);  alignElementTopExt(x);  break;
-    case ILMB:  alignElementBtmMid(y);  alignElementTopInt(x);  break;
-    case MBL:   alignElementBtmMid(y);  alignElementTopMid(x);  break;
-    case MB:    alignElementBtmMid(y);  alignElementMiddle(x);  break;
-    case MBR:   alignElementBtmMid(y);  alignElementBtmMid(x);  break;
-    case IRMB:  alignElementBtmMid(y);  alignElementBtmInt(x);  break;
-    case RMB:   alignElementBtmMid(y);  alignElementBtmExt(x);  break;
-
-    case LB:    alignElementBtmInt(y);  alignElementTopExt(x);  break;
-    case IBL:   alignElementBtmInt(y);  alignElementTopInt(x);  break;
-    case IBML:  alignElementBtmInt(y);  alignElementTopMid(x);  break;
-    case IBM:   alignElementBtmInt(y);  alignElementMiddle(x);  break;
-    case IBMR:  alignElementBtmInt(y);  alignElementBtmMid(x);  break;
-    case IBR:   alignElementBtmInt(y);  alignElementBtmInt(x);  break;
-    case RB:    alignElementBtmInt(y);  alignElementBtmExt(x);  break;
-
-    case BLC:   alignElementBtmExt(y);  alignElementTopExt(x);  break;
-    case BL:    alignElementBtmExt(y);  alignElementTopInt(x);  break;
-    case BML:   alignElementBtmExt(y);  alignElementTopMid(x);  break;
-    case BM:    alignElementBtmExt(y);  alignElementMiddle(x);  break;
-    case BMR:   alignElementBtmExt(y);  alignElementBtmMid(x);  break;
-    case BR:    alignElementBtmExt(y);  alignElementBtmInt(x);  break;
-    case BRC:   alignElementBtmExt(y);  alignElementBtmExt(x);  break;
-    }
-}
-
     /*
      * The order in which the qw_displayElements are given to the function is
      * important; if element b is positioned relative to element a, but given to
@@ -219,4 +115,108 @@ void renderScreen(qw_vec2 blueprint[], int amount, ...) {
     freeElement(&window);
 
     va_end(elements);
+}
+
+void allocateElement(qw_displayElement *element) {
+    int i;
+
+    element->contents = (char**)malloc(sizeof(char*)*element->size.y);
+    if (element->contents==NULL) {
+        printf("ERROR: Could not allocate memory");
+        exit(EXIT_FAILURE);
+    }
+
+    for (i=0; i<element->size.y; i++) {
+        element->contents[i] = (char*)malloc(sizeof(char)*element->size.x);
+        if (element->contents[i]==NULL) {
+            printf("ERROR: Could not allocate memory");
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+void freeElement(qw_displayElement *element) {
+    int i;
+
+    for (i=0; i<element->size.y; i++)
+        free(element->contents[i]);
+
+    free(element->contents);
+}
+
+void fillElement(qw_displayElement element, char *contents[element.size.x]) {
+    int i, j;
+    for (i=0; i<element.size.y; i++)
+        for (j=0; j<element.size.x; j++)
+            element.contents[i][j] = contents[i][j];
+}
+
+qw_vec2 getScreenSize() {
+    struct winsize w;
+    ioctl(0, TIOCGWINSZ, &w);
+
+    qw_vec2 screenSize = {.x=w.ws_col, .y=w.ws_row};
+
+    return screenSize;
+}
+
+void positionElement(qw_displayElement *element) {
+    switch (element->vaguePos) {  //Tremble before the ALMIGHTY SWITCH CASE
+
+    case TLC:   alignElementTopExt(y);  alignElementTopExt(x);  break;
+    case TL:    alignElementTopExt(y);  alignElementTopInt(x);  break;
+    case TML:   alignElementTopExt(y);  alignElementTopMid(x);  break;
+    case TM:    alignElementTopExt(y);  alignElementMiddle(x);  break;
+    case TMR:   alignElementTopExt(y);  alignElementBtmMid(x);  break;
+    case TR:    alignElementTopExt(y);  alignElementBtmInt(x);  break;
+    case TRC:   alignElementTopExt(y);  alignElementBtmExt(x);  break;
+
+    case LT:    alignElementTopInt(y);  alignElementTopExt(x);  break;
+    case ITL:   alignElementTopInt(y);  alignElementTopInt(x);  break;
+    case ITML:  alignElementTopInt(y);  alignElementTopMid(x);  break;
+    case ITM:   alignElementTopInt(y);  alignElementMiddle(x);  break;
+    case ITMR:  alignElementTopInt(y);  alignElementBtmMid(x);  break;
+    case ITR:   alignElementTopInt(y);  alignElementBtmInt(x);  break;
+    case RT:    alignElementTopInt(y);  alignElementBtmExt(x);  break;
+
+    case LMT:   alignElementTopMid(y);  alignElementTopExt(x);  break;
+    case ILMT:  alignElementTopMid(y);  alignElementTopInt(x);  break;
+    case MTL:   alignElementTopMid(y);  alignElementTopMid(x);  break;
+    case MT:    alignElementTopMid(y);  alignElementMiddle(x);  break;
+    case MTR:   alignElementTopMid(y);  alignElementBtmMid(x);  break;
+    case IRMT:  alignElementTopMid(y);  alignElementBtmInt(x);  break;
+    case RMT:   alignElementTopMid(y);  alignElementBtmExt(x);  break;
+
+    case LM:    alignElementMiddle(y);  alignElementTopExt(x);  break;
+    case ILM:   alignElementMiddle(y);  alignElementTopInt(x);  break;
+    case ML:    alignElementMiddle(y);  alignElementTopMid(x);  break;
+    case M:     alignElementMiddle(y);  alignElementMiddle(x);  break;
+    case MR:    alignElementMiddle(y);  alignElementBtmMid(x);  break;
+    case IRM:   alignElementMiddle(y);  alignElementBtmInt(x);  break;
+    case RM:    alignElementMiddle(y);  alignElementBtmExt(x);  break;
+
+    case LMB:   alignElementBtmMid(y);  alignElementTopExt(x);  break;
+    case ILMB:  alignElementBtmMid(y);  alignElementTopInt(x);  break;
+    case MBL:   alignElementBtmMid(y);  alignElementTopMid(x);  break;
+    case MB:    alignElementBtmMid(y);  alignElementMiddle(x);  break;
+    case MBR:   alignElementBtmMid(y);  alignElementBtmMid(x);  break;
+    case IRMB:  alignElementBtmMid(y);  alignElementBtmInt(x);  break;
+    case RMB:   alignElementBtmMid(y);  alignElementBtmExt(x);  break;
+
+    case LB:    alignElementBtmInt(y);  alignElementTopExt(x);  break;
+    case IBL:   alignElementBtmInt(y);  alignElementTopInt(x);  break;
+    case IBML:  alignElementBtmInt(y);  alignElementTopMid(x);  break;
+    case IBM:   alignElementBtmInt(y);  alignElementMiddle(x);  break;
+    case IBMR:  alignElementBtmInt(y);  alignElementBtmMid(x);  break;
+    case IBR:   alignElementBtmInt(y);  alignElementBtmInt(x);  break;
+    case RB:    alignElementBtmInt(y);  alignElementBtmExt(x);  break;
+
+    case BLC:   alignElementBtmExt(y);  alignElementTopExt(x);  break;
+    case BL:    alignElementBtmExt(y);  alignElementTopInt(x);  break;
+    case BML:   alignElementBtmExt(y);  alignElementTopMid(x);  break;
+    case BM:    alignElementBtmExt(y);  alignElementMiddle(x);  break;
+    case BMR:   alignElementBtmExt(y);  alignElementBtmMid(x);  break;
+    case BR:    alignElementBtmExt(y);  alignElementBtmInt(x);  break;
+    case BRC:   alignElementBtmExt(y);  alignElementBtmExt(x);  break;
+    }
 }
