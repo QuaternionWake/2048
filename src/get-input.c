@@ -13,7 +13,7 @@
 #define ARROW_RIGHT 67
 #define ARROW_LEFT 68
 #define KEY_BACKSPACE 127
-#define KEY_TAB 11
+#define KEY_TAB 9
 
 qw_input getInput() {
     if (dontWaitForInput() == 0)
